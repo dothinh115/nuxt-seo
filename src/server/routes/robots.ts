@@ -39,7 +39,9 @@ Disallow: /
 User-Agent: DotBot
 Disallow: /
 `
-  event.node.res.setHeader('Content-Type', 'text/plain')
+  event.node.res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+  event.node.res.setHeader('Cache-Control', 'public, max-age=3600')
+  event.node.res.setHeader('X-Robots-Tag', 'noindex')
   return robotsTxt
 })
 
