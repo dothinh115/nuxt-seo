@@ -163,6 +163,37 @@ const { meta, structuredData } = useSEO({
 </script>
 ```
 
+### Reactive usage (using `computed` / state)
+
+Both `usePageSEO` và `useSEO` đều có thể nhận **object tĩnh** hoặc **hàm trả về config**, vì vậy bạn có thể dùng reactive state/computed một cách an toàn.
+
+```vue
+<script setup lang="ts">
+const article = computed(() => ({
+  title: 'Article Title',
+  description: 'Article description',
+  image: '/article-og.png',
+}))
+
+// Cách 1: Dùng function để đọc reactive mỗi lần (khuyến nghị)
+usePageSEO(() => ({
+  title: article.value.title,
+  description: article.value.description,
+  image: article.value.image,
+  type: 'article',
+}))
+
+// Cách 2: Dùng trực tiếp trong useSEO
+const { meta, structuredData } = useSEO(() => ({
+  title: article.value.title,
+  description: article.value.description,
+  url: `https://example.com/blog/article`,
+  image: article.value.image,
+  type: 'article',
+}))
+</script>
+```
+
 ## API Reference
 
 ### Module Options
@@ -218,7 +249,7 @@ interface PageSEOConfig extends SEOConfig {
 
 ### Composables
 
-#### `usePageSEO(pageConfig?: Partial<SEOConfig>)`
+#### `usePageSEO(pageConfig?: Partial<SEOConfig> | (() => Partial<SEOConfig>))`
 
 Composable to set SEO for the current page. Automatically merges:
 1. Global defaults from `nuxt.config.ts`
@@ -227,15 +258,26 @@ Composable to set SEO for the current page. Automatically merges:
 
 **Returns:** Result from `useSEO()`
 
-**Example:**
+**Example (static object):**
 ```typescript
 usePageSEO({
   title: 'Custom Title',
-  description: 'Custom Description'
+  description: 'Custom Description',
 })
 ```
 
-#### `useSEO(config: SEOConfig)`
+**Example (reactive, using function):**
+```typescript
+const title = computed(() => `Blog - ${post.value.title}`)
+
+usePageSEO(() => ({
+  title: title.value,
+  description: post.value.excerpt,
+  image: post.value.image,
+}))
+```
+
+#### `useSEO(config: SEOConfig | (() => SEOConfig))`
 
 Core SEO composable that sets meta tags, Open Graph, Twitter Cards, and structured data.
 
