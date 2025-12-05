@@ -3,13 +3,13 @@ import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler((event) => {
   const config = useRuntimeConfig()
-  const publicConfig = (config.public || {}) as any
+  const publicConfig = config.public || {}
   const seoConfig = publicConfig.seo || {}
   const siteUrl = seoConfig.siteUrl || ''
   const siteName = seoConfig.siteName || ''
   const webmanifestConfig = seoConfig.webmanifest || {}
 
-  const manifest: Record<string, any> = {
+  const manifest = {
     name: siteName,
     short_name: siteName,
     description: seoConfig.description || '',
