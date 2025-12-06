@@ -1,10 +1,36 @@
 {
   "name": "@enfyra/nuxt-seo",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "A powerful, configurable SEO module for Nuxt 4 with automatic OG image generation",
   "type": "module",
   "main": "./module.ts",
   "types": "./module.d.ts",
+  "files": [
+    "module.ts",
+    "module.d.ts",
+    "index.ts",
+    "src/**/*"
+  ],
+  "keywords": [
+    "nuxt",
+    "nuxt-module",
+    "nuxt4",
+    "seo",
+    "meta-tags",
+    "open-graph",
+    "twitter-cards",
+    "structured-data",
+    "json-ld",
+    "sitemap",
+    "robots-txt",
+    "og-image",
+    "pwa",
+    "webmanifest"
+  ],
+  "license": "MIT",
+  "author": {
+    "email": "dothinh115@gmail.com"
+  },
   "exports": {
     ".": {
       "types": "./module.d.ts",
@@ -36,7 +62,7 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/enfyra/nuxt-seo"
   },
   "peerDependencies": {
     "nuxt": "^4.0.0",
