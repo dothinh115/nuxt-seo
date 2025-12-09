@@ -1,5 +1,7 @@
 import { defineNuxtModule, addImportsDir, addServerHandler, createResolver } from '@nuxt/kit'
-import type { SEOConfig, OgImageConfig, WebManifestConfig } from './src/types'
+import { fileURLToPath } from 'node:url'
+import { dirname, join } from 'node:path'
+import type { SEOConfig, OgImageConfig, WebManifestConfig } from './types'
 
 export interface ModuleOptions extends Partial<SEOConfig> {
   enabled?: boolean
@@ -30,7 +32,8 @@ export interface ModuleOptions extends Partial<SEOConfig> {
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'enfyra-nuxt-seo',
+    name: '@enfyra/nuxt-seo',
+    version: '0.1.12',
     configKey: 'seo',
     compatibility: {
       nuxt: '^4.0.0',
@@ -64,7 +67,13 @@ export default defineNuxtModule<ModuleOptions>({
     },
   },
   setup(options: ModuleOptions, nuxt: any) {
-    const { resolve } = createResolver(import.meta.url)
+    // When built, import.meta.url points to dist/module.mjs
+    // We need to resolve from package root, so go up one level from dist
+    const currentDir = fileURLToPath(new URL('.', import.meta.url))
+    const packageRoot = currentDir.endsWith('/dist/') || currentDir.endsWith('\\dist\\')
+      ? join(currentDir, '..')
+      : dirname(fileURLToPath(import.meta.url))
+    const { resolve } = createResolver(packageRoot)
     
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
     ;(nuxt.options.runtimeConfig.public as any).seo = {
@@ -98,11 +107,12 @@ export default defineNuxtModule<ModuleOptions>({
       webmanifest: options.webmanifest || {},
     }
 
-    addImportsDir(resolve('./src/composables'))
+    // Use package name path - Nuxt will resolve from node_modules
+    addImportsDir('@enfyra/nuxt-seo/src/composables')
     
     nuxt.hook('prepare:types', ({ declarations, references }: any) => {
       references.push({
-        path: resolve('./src/types/nuxt-imports.d.ts'),
+        path: '@enfyra/nuxt-seo/src/types/nuxt-imports.d.ts',
       })
       
       declarations.push(`
@@ -115,7 +125,7 @@ declare global {
 
     nuxt.hook('components:dirs', (dirs: any[]) => {
       dirs.push({
-        path: resolve('./src/components'),
+        path: '@enfyra/nuxt-seo/src/components',
         pathPrefix: false,
         global: false,
       })

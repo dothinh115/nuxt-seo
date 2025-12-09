@@ -10,9 +10,9 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": false
   },
-  "include": ["module.ts", "src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*", "index.ts"],
+  "exclude": ["node_modules", "dist", "playground", "test"]
 }
 
